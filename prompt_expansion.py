@@ -56,13 +56,13 @@ class FooocusExpansion:
         if 'cpu' not in load_device.type and model_management.should_use_fp16():
             self.model.half()
 
+        self.model.to(load_device)
         offload_device = model_management.text_encoder_offload_device()
         self.patcher = ModelPatcher(self.model, load_device=load_device, offload_device=offload_device)
 
         # print(f'Fooocus Expansion engine loaded for {load_device}.')
 
     def __call__(self, prompt, seed):
-        model_management.load_model_gpu(self.patcher)
         seed = int(seed)
         set_seed(seed)
         origin = safe_str(prompt)
